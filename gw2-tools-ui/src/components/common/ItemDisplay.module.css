@@ -1,0 +1,31 @@
+.junk {
+    border: 3px solid #AAAAAA;
+}
+
+.basic {
+    border: 3px solid #0000;
+}
+
+.fine {
+    border: 3px solid #62A4DA;
+}
+
+.masterwork {
+    border: 3px solid #1a9306;
+}
+
+.rare {
+    border: 3px solid #fcd00b;
+}
+
+.exotic {
+    border: 3px solid #ffa405;
+}
+
+.legendary {
+    border: 3px solid #4C139D;
+}
+
+.ascended {
+    border: 3px solid #fb3e8d;
+}

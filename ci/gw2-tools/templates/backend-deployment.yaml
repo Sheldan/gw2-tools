@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  {{- if not .Values.backend.autoscaling.enabled }}
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      {{- with .Values.backend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: backend
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "gw2Tools.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.backend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.backend.securityContext | nindent 12 }}
+          image: "{{ .Values.backend.image.repository }}/{{ .Values.backend.image.image }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          env:
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbPassword
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbHost
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbPort
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbUser
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbName
+            {{- range $key, $value := .Values.backend.propertyConfig }}
+            - name: {{ $key | quote }}
+              value: {{ $value | quote}}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.port }}
+              protocol: TCP
+            {{- if .Values.backend.debug.enabled }}
+            - name: debug
+              containerPort: {{ .Values.backend.debug.port }}
+              protocol: TCP
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: {{ .Values.backend.service.port }}
+            initialDelaySeconds: {{ $.Values.backend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.backend.readinessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.backend.readinessProbe.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: {{ .Values.backend.service.port }}
+            initialDelaySeconds: {{ $.Values.backend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.backend.livenessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.backend.livenessProbe.failureThreshold }}
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -18,7 +18,19 @@
 *.zip
 *.tar.gz
 *.rar
+.idea
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+/gw2-tools-frontend/resources/static/
+/gw2-tools-frontend/resources/favicon.ico
+/gw2-tools-frontend/resources/asset-manifest.json
+/gw2-tools-frontend/resources/manifest.json
+/gw2-tools-frontend/resources/robots.txt
+/gw2-tools-frontend/resources/logo512.png
+/gw2-tools-frontend/resources/index.html
+/gw2-tools-frontend/resources/logo192.png
+/tilt/gw2-tools-dev/Chart.lock
+/target/
+*.tgz

@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+}
+
+.result {
+    width: 25%;
+    background: lightblue;
+    /* Just so it's visible */
+}
+.opened {
+    flex: 1;
+    /* Grow to rest of container */
+    background: lightgreen;
+    /* Just so it's visible */
+}

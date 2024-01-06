@@ -1,0 +1,14 @@
+.itemRateContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.openedItem {
+    flex: 1;
+    background-color: palevioletred;
+}
+
+.resultingItems {
+    width: 90%;
+    background-color: darkseagreen;
+}

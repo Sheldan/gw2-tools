@@ -1,0 +1,11 @@
+apiVersion: v2
+description: gw2-tools dev chart
+name: gw2-tools-dev
+version: 1.0.0
+dependencies:
+  - name: gw2-tools
+    repository: file://../../ci/gw2-tools
+    version: ">= 0.0.1"
+  - name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 12.12.10 # 13.x.x uses postgresql 16.x

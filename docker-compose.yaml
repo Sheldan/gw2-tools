@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  gw2-tools-backend:
+    build:
+      context: gw2-tools-backend/packaging/src/main/docker
+    image: ${REGISTRY_PREFIX}gw2-tools-backend:${VERSION:-latest}
+  gw2-tools-frontend:
+    build:
+      context: gw2-tools-frontend
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY_PREFIX}gw2-tools-frontend:${VERSION:-latest}
+  database:
+    build:
+      context: gw2-tools-backend/database/src/main
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY_PREFIX}gw2-tools-database:${VERSION:-latest}

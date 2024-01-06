@@ -1,0 +1,3 @@
+*.tgz
+tilt/gw2-tools-dev/tmpcharts/
+tilt/gw2-tools-dev/charts/*.tgz

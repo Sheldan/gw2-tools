@@ -1,0 +1,44 @@
+{{- if .Values.dbDeployment.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-config-deployment-job
+  annotations:
+    "helm.sh/hook": pre-upgrade,pre-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: db-config-deployment-job
+          image: "{{ $.Values.dbDeployment.image.repository }}/{{ $.Values.dbDeployment.image.image }}:{{ $.Values.dbDeployment.image.tag | default .Chart.AppVersion}}"
+          imagePullPolicy: {{ $.Values.dbDeployment.image.pullPolicy }}
+          args:
+            - "--changelog-file=changeLog.xml"
+            - "--defaultsFile=/liquibase/config/liquibase.properties"
+            - "update"
+          volumeMounts:
+            - mountPath: "/liquibase/config/"
+              name: liquibase-config
+              readOnly: true
+      restartPolicy: Never
+      volumes:
+        - name: liquibase-config
+          secret:
+            secretName: liquibase-config
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: liquibase-config
+data:
+  liquibase.properties: {{ (tpl (.Files.Get "configuration/db/liquibase.properties") . ) | b64enc }}
+{{- end }}
+
+

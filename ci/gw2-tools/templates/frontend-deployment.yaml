@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  {{- if not .Values.frontend.autoscaling.enabled }}
+  replicas: {{ .Values.frontend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: frontend
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "gw2Tools.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.frontend.securityContext | nindent 12 }}
+          image: "{{ .Values.frontend.image.repository }}/{{ .Values.frontend.image.image }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          env:
+            - name: BACKEND_HOST
+              value: "{{ .Values.backend.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: BACKEND_PORT
+              value: "{{ .Values.backend.service.port }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.frontend.service.port }}
+            initialDelaySeconds: {{ $.Values.frontend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.frontend.livenessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.frontend.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.frontend.service.port }}
+            initialDelaySeconds: {{ $.Values.frontend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.frontend.readinessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.frontend.readinessProbe.failureThreshold }}
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

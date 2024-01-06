@@ -1,0 +1,175 @@
+# Default values for gw2-tools.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+backend:
+  image:
+    repository: harbor.sheldan.dev/gw2
+    pullPolicy: Always
+    image: gw2-tools-backend
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: 0.0.1
+  debug:
+    enabled: true
+    port: 5005
+  service:
+    type: ClusterIP
+    port: 8080
+    name: backend-service
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  resources:
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    path: /
+
+    pathType: Prefix
+
+    hosts:
+    extraPaths: []
+    tls: []
+
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  livenessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    failureThreshold: 3
+
+  propertyConfig:
+    hikariPoolSize: 3
+
+dbDeployment:
+  enabled: true
+  image:
+    repository: harbor.sheldan.dev/gw2
+    image: gw2-tools-database
+    tag: 0.0.1
+    pullPolicy: Always
+
+cacheJob:
+  enabled: true
+  image:
+    repository:
+    pullPolicy: Always
+    image: curlimages/curl
+    tag: 8.5.0
+  cronExpression: "@weekly"
+
+
+dbCredentials:
+  password:
+  userName:
+  host:
+  port:
+  name:
+db:
+  schemaName: gw2
+
+frontend:
+  image:
+    repository: harbor.sheldan.dev/gw2
+    pullPolicy: IfNotPresent
+    image: gw2-tools-frontend
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: 0.0.1
+  port: 8080
+  service:
+    type: ClusterIP
+    port: 8080
+    name: frontend
+  nodeSelector: {}
+  livenessProbe:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+    failureThreshold: 3
+
+  tolerations: []
+
+  affinity: {}
+
+  resources:
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    path: /
+
+    pathType: Prefix
+
+    hosts:
+    extraPaths: []
+    tls: []
+
+  replicaCount: 1
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+

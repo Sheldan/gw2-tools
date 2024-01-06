@@ -1,0 +1,38 @@
+{{- if .Values.cacheJob.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cache-job
+spec:
+  schedule: {{ .Values.cacheJob.cronExpression | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: item-cache
+              image: {{ .Values.cacheJob.image.repository }}{{ .Values.cacheJob.image.image }}:{{ .Values.cacheJob.image.tag }}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - curl -X POST "${BACKEND_HOST}:${BACKEND_PORT}/item-cache"
+              env:
+                - name: BACKEND_HOST
+                  value: "{{ .Values.backend.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+                - name: BACKEND_PORT
+                  value: "{{ .Values.backend.service.port }}"
+            - name: currency-cache
+              image: {{ .Values.cacheJob.image.repository }}{{ .Values.cacheJob.image.image }}:{{ .Values.cacheJob.image.tag }}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - curl -X POST "${BACKEND_HOST}:${BACKEND_PORT}/currency-cache"
+              env:
+                - name: BACKEND_HOST
+                  value: "{{ .Values.backend.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+                - name: BACKEND_PORT
+                  value: "{{ .Values.backend.service.port }}"
+          restartPolicy: Never
+{{- end }}
