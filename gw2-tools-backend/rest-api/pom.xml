@@ -4,7 +4,7 @@
     <parent>
         <groupId>dev.sheldan.gw2.tools</groupId>
         <artifactId>gw2-tools</artifactId>
-        <version>0.0.5-SNAPSHOT</version>
+        <version>0.0.5</version>
     </parent>
 
     <artifactId>rest-api</artifactId>
