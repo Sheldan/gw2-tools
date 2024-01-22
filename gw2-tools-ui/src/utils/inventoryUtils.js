@@ -144,6 +144,7 @@ export function calculateBankDifferences(existingBank, incomingBankSlots, mockin
                 count: 0,
                 changed: -slot.count
             })
+            slotsToUpdate[slot.id] = -slot.count
         }
     })
     return [slotsToAdd, slotsToRemove, slotsToUpdate];
@@ -187,6 +188,7 @@ export function calculateSharedInventoryDifferences(existingSharedInventory, inc
                 count: 0,
                 changed: -slot.count
             })
+            slotsToUpdate[slot.id] = -slot.count
         }
     })
     return [slotsToAdd, slotsToRemove, slotsToUpdate];
@@ -230,6 +232,7 @@ export function calculateMaterialsDifference(materials, materialSlots, mocking) 
                 count: 0,
                 changed: -slot.count
             })
+            slotsToUpdate[slot.id] = -slot.count
         }
     })
     return [slotsToAdd, slotsToRemove, slotsToUpdate];

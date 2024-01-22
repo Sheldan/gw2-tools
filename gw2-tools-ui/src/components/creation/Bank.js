@@ -24,13 +24,13 @@ export function Bank() {
 
     const removedItems =
         <>
-            {displayAdded ? <span className={styles.spanNewLine}>Removed items</span> : ''}
+            {displayRemoved ? <span className={styles.spanNewLine}>Removed items</span> : ''}
             {bank.removedSlots.map((item) => <InventoryItem item={item}/>)}
         </>
 
     const addedItems =
         <>
-            {displayRemoved ? <span className={styles.spanNewLine}>Added Items</span> : ''}
+            {displayAdded ? <span className={styles.spanNewLine}>Added Items</span> : ''}
             {bank.addedSlots.map((item) => <InventoryItem item={item}/>)}
         </>
 
