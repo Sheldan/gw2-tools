@@ -37,6 +37,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: liquibase-config
+  annotations:
+    "helm.sh/hook": pre-upgrade,pre-install
+    "helm.sh/hook-weight": "-6"
 data:
   liquibase.properties: {{ (tpl (.Files.Get "configuration/db/liquibase.properties") . ) | b64enc }}
 {{- end }}
