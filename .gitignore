@@ -32,5 +32,4 @@ replay_pid*
 /gw2-tools-frontend/resources/index.html
 /gw2-tools-frontend/resources/logo192.png
 /tilt/gw2-tools-dev/Chart.lock
-*/target/*
 *.tgz
