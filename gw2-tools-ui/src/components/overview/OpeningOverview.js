@@ -72,9 +72,13 @@ export function OpeningOverview() {
     }
 
     async function loadOpenings() {
-        setOpeningsLoading(true)
-        const openings = await fetchOpenings();
-        dispatch(setOpenings(openings))
+        try {
+            setOpeningsLoading(true)
+            const openings = await fetchOpenings();
+            dispatch(setOpenings(openings))
+        } catch (e) {
+            console.log(e)
+        }
         setOpeningsLoading(false)
     }
 

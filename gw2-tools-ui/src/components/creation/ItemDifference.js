@@ -123,11 +123,15 @@ export function ItemDifference() {
 
     async function fetchInformation() {
         dispatch(setLoading(true))
-        await updateWallet()
-        await updateBank()
-        await updateMaterials()
-        await updatedSharedInventory()
-        await updateInventoryCharacterSpecific()
+        try {
+            await updateWallet()
+            await updateBank()
+            await updateMaterials()
+            await updatedSharedInventory()
+            await updateInventoryCharacterSpecific()
+        } catch (e) {
+            console.log(e)
+        }
         dispatch(setLoading(false))
     }
 

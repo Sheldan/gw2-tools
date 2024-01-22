@@ -51,8 +51,8 @@ def get_account_characters():
     api_key = request.headers.get(api_key_header_name)
     headers = {'api-key': api_key}
     logging.info("Loading characters")
-    inventory_response = requests.get(f'{characters_url}', headers=headers)
-    return inventory_response.text
+    characters_response = requests.get(f'{characters_url}', headers=headers)
+    return characters_response.text, characters_response.status_code
 
 
 @app.route('/inventory/')
@@ -62,7 +62,7 @@ def get_account_inventory():
     headers = {'api-key': api_key}
     logging.info("Rendering inventory of full account")
     inventory_response = requests.get(f'{inventory_url}', headers=headers)
-    text = inventory_response.text
+    text = inventory_response.text, inventory_response.status_code
     return text
 
 
@@ -73,7 +73,7 @@ def get_account_wallet():
     headers = {'api-key': api_key}
     logging.info("Rendering wallet of account")
     wallet_response = requests.get(f'{wallet_url}', headers=headers)
-    return wallet_response.text
+    return wallet_response.text, wallet_response.status_code
 
 
 @app.route('/bank/')
@@ -83,7 +83,7 @@ def get_account_bank():
     headers = {'api-key': api_key}
     logging.info("Rendering bank of account")
     bank_response = requests.get(f'{bank_url}', headers=headers)
-    return bank_response.text
+    return bank_response.text, bank_response.status_code
 
 
 @app.route('/materials/')
@@ -93,7 +93,7 @@ def get_materials():
     headers = {'api-key': api_key}
     logging.info("Rendering materials of account")
     materials_response = requests.get(f'{materials_url}', headers=headers)
-    return materials_response.text
+    return materials_response.text, materials_response.status_code
 
 
 @app.route('/sharedInventory/')
@@ -103,7 +103,7 @@ def get_shared_inventory():
     headers = {'api-key': api_key}
     logging.info("Rendering shared inventory of account")
     shared_inventory_response = requests.get(f'{shared_inventory_url}', headers=headers)
-    return shared_inventory_response.text
+    return shared_inventory_response.text, shared_inventory_response.status_code
 
 
 @app.route('/submissionTemplates/')
@@ -111,14 +111,14 @@ def get_submission_templates():
     logging.info("Rendering submission templates")
     parameters_query = request.query_string.decode()
     submission_templates_response = requests.get(f'{submission_templates_url}?{parameters_query}')
-    return submission_templates_response.text
+    return submission_templates_response.text, submission_templates_response.status_code
 
 
 @app.route('/itemRates/')
 def get_item_rates():
     logging.info("Rendering item rates")
     item_rates_response = requests.get(f'{itemRates_url}')
-    return item_rates_response.text
+    return item_rates_response.text, item_rates_response.status_code
 
 
 @app.route('/openings/', methods=['POST'])
@@ -128,7 +128,7 @@ def create_opening():
     headers = {'api-key': api_key, 'Content-Type': 'application/json'}
     logging.info("Creating opening")
     openings_response = requests.post(f'{openings_url}', body, headers=headers)
-    return openings_response.text
+    return openings_response.text, openings_response.status_code
 
 
 @app.route('/openings/', methods=['GET'])
@@ -138,7 +138,7 @@ def get_openings():
     headers = {'api-key': api_key}
     logging.info("Loading openings")
     bank_response = requests.get(f'{openings_url}?{parameters_query}', headers=headers)
-    return bank_response.text
+    return bank_response.text, bank_response.status_code
 
 
 @app.route('/openings/<opening_id>', methods=['DELETE'])
@@ -147,7 +147,7 @@ def delete_opening(opening_id):
     headers = {'api-key': api_key}
     logging.info(f"Deleting opening {opening_id}")
     bank_response = requests.delete(f'{openings_url}/{opening_id}', headers=headers)
-    return bank_response.text
+    return bank_response.text, bank_response.status_code
 
 
 @app.route('/inventory/<character_name>/')
@@ -157,7 +157,7 @@ def get_character_inventory(character_name):
     headers = {'api-key': api_key}
     logging.info("rendering inventory of individual character.")
     inventory_response = requests.get(f'{inventory_url}/{character_name}', headers=headers)
-    return inventory_response.text
+    return inventory_response.text, inventory_response.status_code
 
 
 if __name__ == "__main__":

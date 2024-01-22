@@ -107,12 +107,16 @@ export function OpeningSubmission() {
 
     async function submitOpening() {
         dispatch(setLoading(true))
-        const submissionBody = {}
-        submissionBody.items = getChanges();
-        submissionBody.description = openingDescription;
-        await fetcher("openings", {apiKey: apiKey, method: "POST", body: JSON.stringify(submissionBody), headers: {"Content-Type": "application/json"}})
-        setOpeningDescription("")
-        toast('Opening has been submitted.')
+        try {
+            const submissionBody = {}
+            submissionBody.items = getChanges();
+            submissionBody.description = openingDescription;
+            await fetcher("openings", {apiKey: apiKey, method: "POST", body: JSON.stringify(submissionBody), headers: {"Content-Type": "application/json"}})
+            setOpeningDescription("")
+            toast('Opening has been submitted.')
+        } catch (e) {
+            console.log(e)
+        }
         dispatch(setLoading(false))
     }
 

@@ -82,8 +82,12 @@ export const CharacterInventory = ({character}) => {
 
     async function updateCharacter() {
         setCharacterLoading(true)
-        await reloadCharacterInventory();
-        await reloadWallet();
+        try {
+            await reloadCharacterInventory();
+            await reloadWallet();
+        } catch (e) {
+            console.log(e)
+        }
         setCharacterLoading(false)
     }
 

@@ -42,19 +42,23 @@ export function Bank() {
 
     async function reloadBank() {
         setBankLoading(true)
-        const bankSlots = await fetchBank();
-        if(!config.locked) {
-            const bankState = {
-                slots: bankSlots,
-                addedSlots: [],
-                removedSlots: []
+        try {
+            const bankSlots = await fetchBank();
+            if(!config.locked) {
+                const bankState = {
+                    slots: bankSlots,
+                    addedSlots: [],
+                    removedSlots: []
+                }
+                dispatch(setBank(bankState))
+            } else {
+                const [slotsToAdd, slotsToRemove, slotsToUpdate] = calculateBankDifferences(bank, bankSlots, config.mocking);
+                dispatch(setRemovedBankSlots(slotsToRemove))
+                dispatch(setAddedBankSlots(slotsToAdd))
+                dispatch(updateChangedBankSlots(slotsToUpdate))
             }
-            dispatch(setBank(bankState))
-        } else {
-            const [slotsToAdd, slotsToRemove, slotsToUpdate] = calculateBankDifferences(bank, bankSlots, config.mocking);
-            dispatch(setRemovedBankSlots(slotsToRemove))
-            dispatch(setAddedBankSlots(slotsToAdd))
-            dispatch(updateChangedBankSlots(slotsToUpdate))
+        } catch (e) {
+            console.log(e)
         }
         setBankLoading(false)
     }

@@ -48,21 +48,26 @@ export function Materials() {
 
     async function reloadMaterials() {
         setMaterialsLoading(true)
-        const materialSlots = await fetchMaterials();
-        if(!config.locked) {
-            const materialsState = {
-                slots: materialSlots,
-                addedSlots: [],
-                removedSlots: []
-            }
-            dispatch(setMaterials(materialsState))
-        } else {
-            const [slotsToAdd, slotsToRemove, slotsToUpdate] = calculateMaterialsDifference(materials, materialSlots, config.mocking);
+        try {
+            const materialSlots = await fetchMaterials();
+            if(!config.locked) {
+                const materialsState = {
+                    slots: materialSlots,
+                    addedSlots: [],
+                    removedSlots: []
+                }
+                dispatch(setMaterials(materialsState))
+            } else {
+                const [slotsToAdd, slotsToRemove, slotsToUpdate] = calculateMaterialsDifference(materials, materialSlots, config.mocking);
 
-            dispatch(setRemovedMaterialSlots(slotsToRemove))
-            dispatch(setAddedMaterialSlots(slotsToAdd))
-            dispatch(updateChangedMaterialSlots(slotsToUpdate))
+                dispatch(setRemovedMaterialSlots(slotsToRemove))
+                dispatch(setAddedMaterialSlots(slotsToAdd))
+                dispatch(updateChangedMaterialSlots(slotsToUpdate))
+            }
+        } catch (e) {
+            console.log(e)
         }
+
         setMaterialsLoading(false)
     }
 

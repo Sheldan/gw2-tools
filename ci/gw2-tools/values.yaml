@@ -8,7 +8,7 @@ backend:
     pullPolicy: Always
     image: gw2-tools-backend
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 0.0.1
+    tag:
   debug:
     enabled: true
     port: 5005
@@ -73,7 +73,7 @@ dbDeployment:
   image:
     repository: harbor.sheldan.dev/gw2
     image: gw2-tools-database
-    tag: 0.0.1
+    tag:
     pullPolicy: Always
 
 cacheJob:
@@ -101,7 +101,7 @@ frontend:
     pullPolicy: IfNotPresent
     image: gw2-tools-frontend
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 0.0.1
+    tag:
   port: 8080
   service:
     type: ClusterIP

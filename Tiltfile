@@ -32,8 +32,8 @@ docker_build(registry + 'gw2-tools-database', 'gw2-tools-backend/database/src/ma
 
 local('cd tilt/gw2-tools-dev && helm dep up')
 k8s_yaml(helm('tilt/gw2-tools-dev', values=[
-'./../drr-environments/argocd/apps/gw2-tools/values/local/values.yaml',
-'./../drr-environments/argocd/apps/gw2-tools/values/local/values.secrets.yaml'
+'./../gw2-tools-environments/argocd/apps/gw2-tools/values/local/values.yaml',
+'secrets://./../gw2-tools-environments/argocd/apps/gw2-tools/values/local/values.secrets.yaml'
 ]))
 
 k8s_resource('backend', port_forwards='5005:5005', labels=['applications'])
