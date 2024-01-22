@@ -4,7 +4,7 @@
     <parent>
         <groupId>dev.sheldan.gw2.tools</groupId>
         <artifactId>gw2-tools</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.2</version>
     </parent>
 
     <artifactId>database</artifactId>
